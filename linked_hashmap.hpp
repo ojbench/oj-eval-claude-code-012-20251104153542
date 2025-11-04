@@ -227,14 +227,18 @@ public:
 		bool operator==(const iterator &rhs) const {
 		    return node == rhs.node && map == rhs.map;
 		}
-		bool operator==(const const_iterator &rhs) const;
+		bool operator==(const const_iterator &rhs) const {
+		    return node == rhs.node && map == rhs.map;
+		}
 		/**
 		 * some other operator for iterator.
 		 */
 		bool operator!=(const iterator &rhs) const {
 		    return !(*this == rhs);
 		}
-		bool operator!=(const const_iterator &rhs) const;
+		bool operator!=(const const_iterator &rhs) const {
+		    return !(*this == rhs);
+		}
 
 		/**
 		 * for the support of it->first.
