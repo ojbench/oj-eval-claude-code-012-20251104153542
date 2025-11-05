@@ -179,7 +179,8 @@ public:
 		 * TODO iter++
 		 */
 		iterator operator++(int) {
-		    if (!node || !map) throw invalid_iterator();
+		    if (!map) throw invalid_iterator();
+		    if (!node) throw invalid_iterator(); // Can't increment end iterator
 		    iterator temp = *this;
 		    node = node->next;
 		    return temp;
@@ -188,7 +189,8 @@ public:
 		 * TODO ++iter
 		 */
 		iterator & operator++() {
-		    if (!node || !map) throw invalid_iterator();
+		    if (!map) throw invalid_iterator();
+		    if (!node) throw invalid_iterator(); // Can't increment end iterator
 		    node = node->next;
 		    return *this;
 		}
@@ -197,12 +199,16 @@ public:
 		 */
 		iterator operator--(int) {
 		    if (!map) throw invalid_iterator();
-		    iterator temp = *this;
-		    if (node) {
-		        node = node->prev;
-		    } else {
+		    if (!node) {
+		        // Decrementing end iterator - move to tail
+		        if (!map->tail) throw invalid_iterator(); // Empty map
 		        node = map->tail;
+		    } else if (node == map->head) {
+		        throw invalid_iterator(); // Can't decrement begin iterator
+		    } else {
+		        node = node->prev;
 		    }
+		    iterator temp = *this;
 		    return temp;
 		}
 		/**
@@ -210,10 +216,14 @@ public:
 		 */
 		iterator & operator--() {
 		    if (!map) throw invalid_iterator();
-		    if (node) {
-		        node = node->prev;
-		    } else {
+		    if (!node) {
+		        // Decrementing end iterator - move to tail
+		        if (!map->tail) throw invalid_iterator(); // Empty map
 		        node = map->tail;
+		    } else if (node == map->head) {
+		        throw invalid_iterator(); // Can't decrement begin iterator
+		    } else {
+		        node = node->prev;
 		    }
 		    return *this;
 		}
@@ -264,35 +274,45 @@ public:
 		const_iterator(const iterator &other) : node(other.node), map(other.map) {}
 
 		const_iterator operator++(int) {
-		    if (!node || !map) throw invalid_iterator();
+		    if (!map) throw invalid_iterator();
+		    if (!node) throw invalid_iterator(); // Can't increment end iterator
 		    const_iterator temp = *this;
 		    node = node->next;
 		    return temp;
 		}
 
 		const_iterator & operator++() {
-		    if (!node || !map) throw invalid_iterator();
+		    if (!map) throw invalid_iterator();
+		    if (!node) throw invalid_iterator(); // Can't increment end iterator
 		    node = node->next;
 		    return *this;
 		}
 
 		const_iterator operator--(int) {
 		    if (!map) throw invalid_iterator();
-		    const_iterator temp = *this;
-		    if (node) {
-		        node = node->prev;
-		    } else {
+		    if (!node) {
+		        // Decrementing end iterator - move to tail
+		        if (!map->tail) throw invalid_iterator(); // Empty map
 		        node = map->tail;
+		    } else if (node == map->head) {
+		        throw invalid_iterator(); // Can't decrement begin iterator
+		    } else {
+		        node = node->prev;
 		    }
+		    const_iterator temp = *this;
 		    return temp;
 		}
 
 		const_iterator & operator--() {
 		    if (!map) throw invalid_iterator();
-		    if (node) {
-		        node = node->prev;
-		    } else {
+		    if (!node) {
+		        // Decrementing end iterator - move to tail
+		        if (!map->tail) throw invalid_iterator(); // Empty map
 		        node = map->tail;
+		    } else if (node == map->head) {
+		        throw invalid_iterator(); // Can't decrement begin iterator
+		    } else {
+		        node = node->prev;
 		    }
 		    return *this;
 		}
